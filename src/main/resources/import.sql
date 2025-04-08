@@ -1,6 +1,3 @@
-insert into tb_category (name) values ('discos');
-insert into tb_category (name) values ('livros');
-insert into tb_category (name) values ('computadores');
-insert into tb_category (name) values ('eletrônicos');
-insert into tb_category (name) values ('dvds');
-insert into tb_category (name) values ('cds');
+insert into tb_category (name, created_at) values ('livros', NOW());
+insert into tb_category (name, created_at) values ('discos', NOW());
+insert into tb_category (name, created_at) values ('computadores', NOW());
