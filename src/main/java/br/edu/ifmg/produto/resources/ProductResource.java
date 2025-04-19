@@ -2,7 +2,6 @@ package br.edu.ifmg.produto.resources;
 
 
 import br.edu.ifmg.produto.dtos.ProductDTO;
-import br.edu.ifmg.produto.entities.Product;
 import br.edu.ifmg.produto.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,5 +43,18 @@ public class ProductResource {
                 .toUri();
 
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dto) {
+        dto = productService.update(id, dto);
+        return ResponseEntity.ok().body(dto);
+    }
+
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

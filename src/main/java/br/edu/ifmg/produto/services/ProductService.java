@@ -27,7 +27,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable) {
         Page<Product> products = productRepository.findAll(pageable);
-        return products.map(product -> new ProductDTO(product);
+        return products.map(product -> new ProductDTO(product));
     }
 
     @Transactional(readOnly = true)
@@ -61,16 +61,15 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO uptade(Long id, ProductDTO dto) {
-
+    public ProductDTO update (Long id, ProductDTO dto) {
         try {
             Product entity = productRepository.getReferenceById(id);
-            copyDtoToEntity(dto, entity);
+            this.copyDtoToEntity(dto, entity);
             entity = productRepository.save(entity);
             return new ProductDTO(entity);
         }
         catch (EntityNotFoundException e) {
-            throw new ResourceNotFound("Category "+ id +" not found");
+            throw new ResourceNotFound("Product not found: " + id);
         }
     }
 
@@ -88,6 +87,14 @@ public class ProductService {
 
     }
 
+
+    private void copyDTPtoEntity(ProductDTO dto, Product entity) {
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setPrice(dto.getPrice());
+        entity.setImageUrl(dto.getImageUrl());
+        dto.getCategories().forEach(c -> entity.getCategories().add(new Category(c)));
+    }
 
 
 }

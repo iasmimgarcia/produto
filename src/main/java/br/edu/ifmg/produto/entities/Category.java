@@ -1,5 +1,6 @@
 package br.edu.ifmg.produto.entities;
 
+import br.edu.ifmg.produto.dtos.CategoryDTO;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -26,6 +27,11 @@ public class Category implements Serializable {
     public Category(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Category(CategoryDTO dto) {
+        this.setId(dto.getId());
+        this.setName(dto.getName());
     }
 
     public Long getId() {
