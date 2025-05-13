@@ -10,7 +10,7 @@ public class Factory {
         p.setName("Iphone XXX");
         p.setPrice(5000);
         p.setImageUrl("https://www.google.com/imgres?q=iphone%20X&imgurl=https%3A%2F%2Fi.zst.com.br%2Fthumbs%2F12%2Fc%2F12%2F-13310084.jpg");
-        p.getCategories().add(new Category(60L, "News"));
+        p.getCategories().add(new Category(1L, "Livros"));
         return p;
     }
     public static ProductDTO createProductDTO() {
