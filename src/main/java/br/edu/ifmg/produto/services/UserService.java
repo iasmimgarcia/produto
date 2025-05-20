@@ -83,12 +83,12 @@ public class UserService {
     }
 
     @Transactional
-    public ProductDTO update (Long id, UserInsertDTO dto) {
+    public UserDTO update (Long id, UserInsertDTO dto) {
         try {
             User entity = userRepository.getReferenceById(id);
             this.copyDtoToEntity(dto, entity);
             entity = userRepository.save(entity);
-            return new ProductDTO();
+            return new UserDTO();
         }
         catch (EntityNotFoundException e) {
             throw new ResourceNotFound("Product not found: " + id);
