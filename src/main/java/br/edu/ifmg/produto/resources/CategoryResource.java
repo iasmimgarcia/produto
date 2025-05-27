@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -49,6 +50,7 @@ public class CategoryResource {
     }
 
     @PostMapping
+    @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto){
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
@@ -59,6 +61,7 @@ public class CategoryResource {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto){
 
         dto = categoryService.update(id, dto);
@@ -67,6 +70,7 @@ public class CategoryResource {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
