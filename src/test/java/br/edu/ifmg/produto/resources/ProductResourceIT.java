@@ -3,6 +3,7 @@ package br.edu.ifmg.produto.resources;
 
 import br.edu.ifmg.produto.dtos.ProductDTO;
 import br.edu.ifmg.produto.util.Factory;
+import br.edu.ifmg.produto.util.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.jmx.support.ObjectNameManager;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,17 +32,27 @@ public class ProductResourceIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+    private String username;
+    private String password;
+    private String token;
+
     private Long existingId;
     private Long nonExistingId;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         existingId = 1L;
         nonExistingId = 2000L;
+
+        username = "maria@gmail.com";
+        password = "123456";
+        token = tokenUtil.obtainAccessToken(mockMvc, username, password);
     }
 
     @Test
-    void findAllShouldReturnSortedPageWhenSortByName()throws Exception {
+    void findAllShouldReturnSortedPageWhenSortByName () throws Exception {
 
         ResultActions resultActions =
                 mockMvc.perform(
@@ -69,6 +78,7 @@ public class ProductResourceIT {
         ResultActions resultActions =
                 mockMvc.perform(
                         put("/product/{id}", existingId)
+                                .header("Authorization", "Bearer " + token)
                                 .content(dtoJson)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -89,6 +99,7 @@ public class ProductResourceIT {
         ResultActions resultActions =
                 mockMvc.perform(
                         put("/product/{id}", nonExistingId)
+                                .header("Authorization", "Bearer " + token)
                                 .content(dtoJson)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -114,6 +125,7 @@ public class ProductResourceIT {
         ResultActions resultActions =
                 mockMvc.perform(
                         post("/product")
+                                .header("Authorization", "Bearer " + token)
                                 .content(dtoJson)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -134,6 +146,7 @@ public class ProductResourceIT {
         ResultActions resultActions =
                 mockMvc.perform(
                         delete("/product/{id}", existingId)
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                 );
@@ -150,6 +163,7 @@ public class ProductResourceIT {
         ResultActions resultActions =
                 mockMvc.perform(
                         delete("/product/{id}", nonExistingId)
+                                .header("Authorization", "Bearer " + token)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                 );

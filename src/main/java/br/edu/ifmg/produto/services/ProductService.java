@@ -2,6 +2,7 @@ package br.edu.ifmg.produto.services;
 
 import br.edu.ifmg.produto.dtos.CategoryDTO;
 import br.edu.ifmg.produto.dtos.ProductDTO;
+import br.edu.ifmg.produto.dtos.ProductListDTO;
 import br.edu.ifmg.produto.entities.Category;
 import br.edu.ifmg.produto.entities.Product;
 import br.edu.ifmg.produto.repository.ProductRepository;
@@ -37,6 +38,10 @@ public class ProductService {
                                 .add(linkTo(methodOn(ProductResource.class).findAll(null)).withSelfRel())
                                 .add(linkTo(methodOn(ProductResource.class).findById(product.getId())).withRel("Get a product"))
                 );
+    }
+
+    public Page<ProductListDTO> findAllPaged (String name, String categoryID, Pageable pageable) {
+        return null;
     }
 
     @Transactional(readOnly = true)
