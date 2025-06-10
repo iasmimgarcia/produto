@@ -36,7 +36,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class UserService implements UserDetailsService {
-
     @Autowired
     protected UserRepository userRepository;
 
@@ -50,24 +49,19 @@ public class UserService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public Page<UserDTO> findAll(Pageable pageable){
-
         Page<User> list = userRepository.findAll(pageable);
-
         return list.map(u -> new UserDTO(u));
     }
 
     @Transactional(readOnly = true)
     public UserDTO findById(Long id){
-
         Optional<User> opt = userRepository.findById(id);
-        User user = opt.orElseThrow(
-                ()-> new ResourceNotFound("User Not Found"));
+        User user = opt.orElseThrow(()-> new ResourceNotFound("User Not Found"));
         return new UserDTO(user);
     }
 
     @Transactional
     public UserDTO insert(UserInsertDTO dto){
-
         User entity = new User();
         copyDtoToEntity(dto, entity);
         entity.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -76,18 +70,15 @@ public class UserService implements UserDetailsService {
     }
 
     private void copyDtoToEntity(UserInsertDTO dto, User entity) {
-
         entity.setFirstName(dto.getFirstName());
         entity.setLastName(dto.getLastName());
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
-
+        // clear
         entity.getRoles().clear();
         for (RoleDTO role : dto.getRoles()) {
-
             Role r = roleRepository.getReferenceById(role.getId());
             entity.getRoles().add(r);
-
         }
     }
 
@@ -115,41 +106,33 @@ public class UserService implements UserDetailsService {
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Integrity violation");
         }
-
     }
 
     @Override
     public
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         List<UserDetailsProjection> result = userRepository.searchUserAndRoleByEmail(username);
-
         if (result.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
-
         User user = new User();
         user.setEmail(result.get(0).getUsername());
         user.setPassword(result.get(0).getPassword());
         for (UserDetailsProjection p : result) {
             user.addRole(new Role(p.getRoleId(), p.getAuthority()));
         }
-
-
         return user;
     }
 
 
     public UserDTO signup(UserInsertDTO dto) {
-
         User entity = new User();
         copyDtoToEntity(dto, entity);
         Role role = roleRepository.findByAuthority("ROLE_OPERATOR");
         entity.getRoles().clear();
-        entity.getRoles().add(role);
+        entity.getRoles().add(role); //inserimos o perfil do operador
         entity.setPassword(passwordEncoder.encode(dto.getPassword()));
         User novo = userRepository.save(entity);
         return new UserDTO(novo);
-        return null;
     }
 }

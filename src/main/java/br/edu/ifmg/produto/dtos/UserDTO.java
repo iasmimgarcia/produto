@@ -22,9 +22,7 @@ public class UserDTO {
 
     private Set<RoleDTO> roles = new HashSet<>();
 
-    public UserDTO (){
-
-    }
+    public UserDTO (){}
 
     public UserDTO(Long id, String firstName, String lastName, String email, String password) {
         this.id = id;

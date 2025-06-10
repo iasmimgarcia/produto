@@ -99,7 +99,6 @@ public class UserResource {
             }
     )
 
-    @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity <UserDTO> signup(@Valid @RequestBody UserInsertDTO dto){
 
         UserDTO user = userService.signup(dto);
